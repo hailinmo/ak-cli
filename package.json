@@ -1,10 +1,16 @@
 {
   "name": "@hesiwen/ak-cli",
-  "version": "0.1.0",
-  "description": "",
+  "version": "0.0.2",
+  "description": "cli工具练习",
+  "private": false,
   "main": "index.js",
   "bin": {
     "ak-init": "index.js"
+  },
+  "homepage": "https://github.com/hailinmo/ak-cli#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hailinmo/ak-cli.git"
   },
   "author": "",
   "license": "ISC",
