@@ -1,6 +1,6 @@
 {
   "name": "@hesiwen/ak-cli",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "cli工具练习",
   "private": false,
   "main": "index.js",

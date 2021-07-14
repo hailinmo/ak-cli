@@ -1,4 +1,3 @@
-#!/usr/bin/env node
 const inquirer = require('inquirer')
 
 const promptList = [
@@ -9,9 +8,16 @@ const promptList = [
     default: 'ak-template', // 默认值
   },
   {
+    type: 'list',
+    message: '选择框架:',
+    name: 'framework',
+    choices: ['react', 'vue'],
+    pageSize: 2, // 设置行数
+  },
+  {
     type: 'checkbox',
     message: '选择插件:',
-    name: 'color',
+    name: 'eslint',
     choices: ['typescript', 'eslint', 'babel', 'prettier'],
     pageSize: 4, // 设置行数
   },
