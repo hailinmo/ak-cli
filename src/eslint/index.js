@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 
 const path = require('path')
-const fs = require('fs')
 const cli = require('./args')
+const { writeContent, readContent } = require('../utils/index')
 
 const {
   eslintJson,
@@ -14,7 +14,7 @@ const {
 } = require('./constants')
 
 function eslintConfig() {
-  cli().then((args) => {
+  cli().then(async (args) => {
     const isTs = args.eslint.includes('typescript')
     const isVue = args.framework === 'vue'
     const isReact = args.framework === 'react'
@@ -44,42 +44,34 @@ function eslintConfig() {
 
     const jsonStr = JSON.stringify(eslintJson, null, '\t')
 
-    //写入文件
+    //写入eslint配置文件
     var eslintFile = path.join(process.cwd(), '.eslintrc.json')
-    fs.writeFile(eslintFile, jsonStr, function (err) {
-      if (err) {
-        return console.log(err)
-      }
-      console.log('eslint配置文件创建成功')
-    })
+    await writeContent(eslintFile, jsonStr)
 
-    //读取文件
+    //读取package文件
     var packageFile = path.join(process.cwd(), 'package.json')
-    fs.readFile(packageFile, 'utf-8', function (err, data) {
-      if (err) {
-        return console.log(err)
-      }
-      const packageData = JSON.parse(data)
-      if (!packageData.devDependencies) {
-        packageData.devDependencies = {}
-      }
-      packageData.devDependencies = {
-        ...packageData.devDependencies,
-        ...(isBabel ? babelPlugins : {}),
-        ...(isTs ? tsPlugins : {}),
-        ...commonEslintPlugins,
-        ...(isVue ? vuePlugins : {}),
-        ...(isReact ? reactPlugins : {}),
-      }
+    const data = await readContent(packageFile, 'utf-8')
+    const packageData = JSON.parse(data)
 
-      const packageStr = JSON.stringify(packageData, null, '\t')
-      fs.writeFile(packageFile, packageStr, function (err) {
-        if (err) {
-          return console.log(err)
-        }
-        console.log('eslint依赖添加成功')
+    packageDev = {
+      ...(packageData.devDependencies || {}),
+      ...(isBabel ? babelPlugins : {}),
+      ...(isTs ? tsPlugins : {}),
+      ...commonEslintPlugins,
+      ...(isVue ? vuePlugins : {}),
+      ...(isReact ? reactPlugins : {}),
+    }
+
+    packageData.devDependencies = {}
+
+    Object.keys(packageDev)
+      .sort()
+      .map((key) => {
+        packageData.devDependencies[key] = packageDev[key]
       })
-    })
+
+    const packageStr = JSON.stringify(packageData, null, '\t')
+    await writeContent(packageFile, packageStr)
   })
 }
 

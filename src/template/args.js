@@ -14,13 +14,6 @@ const promptList = [
     choices: ['react', 'vue'],
     pageSize: 2, // 设置行数
   },
-  {
-    type: 'checkbox',
-    message: '选择插件:',
-    name: 'eslint',
-    choices: ['typescript', 'eslint', 'babel', 'prettier'],
-    pageSize: 4, // 设置行数
-  },
 ]
 
 module.exports = function () {
